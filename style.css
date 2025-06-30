@@ -52,6 +52,11 @@ input, select {
   color: #ccc;
 }
 
+.spell.known {
+  border-left-color: #ffd700;
+  background-color: #2e2e40;
+}
+
 .known-btn {
   background-color: transparent;
   color: #ffcb6b;
@@ -64,4 +69,9 @@ input, select {
 .known-btn:hover {
   background-color: #ffcb6b;
   color: #1e1e2f;
+}
+
+#export-pdf {
+  margin-top: 10px;
+  font-weight: bold;
 }

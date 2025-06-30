@@ -4,18 +4,65 @@ async function fetchSpells() {
 
   const searchInput = document.getElementById("search");
   const levelFilter = document.getElementById("level-filter");
+  const schoolFilter = document.getElementById("school-filter");
+  const componentFilter = document.getElementById("component-filter");
+  const durationFilter = document.getElementById("duration-filter");
+  const sourceFilter = document.getElementById("source-filter");
+  const sortFilter = document.getElementById("sort-filter");
   const spellList = document.getElementById("spell-list");
+
+  // Função auxiliar para preencher filtros únicos
+  function fillUniqueOptions(spells, key, element) {
+    const uniqueValues = [...new Set(spells.map(spell => spell[key]).filter(Boolean))];
+    uniqueValues.sort();
+    uniqueValues.forEach(value => {
+      const option = document.createElement("option");
+      option.value = value;
+      option.textContent = value;
+      element.appendChild(option);
+    });
+  }
+
+  // Preenche os filtros adicionais
+  fillUniqueOptions(spells, "Escola", schoolFilter);
+  fillUniqueOptions(spells, "Componente", componentFilter);
+  fillUniqueOptions(spells, "Duração", durationFilter);
+  fillUniqueOptions(spells, "Fonte", sourceFilter);
 
   function renderSpells() {
     const query = searchInput.value.toLowerCase();
     const level = levelFilter.value;
+    const escola = schoolFilter.value;
+    const componente = componentFilter.value;
+    const duracao = durationFilter.value;
+    const fonte = sourceFilter.value;
+    const ordenacao = sortFilter.value;
 
-    const filtered = spells.filter(spell => {
+    let filtered = spells.filter(spell => {
       const matchesName = spell.Título.toLowerCase().includes(query);
       const matchesLevel = level === "" || spell.Nível.toString() === level;
-      return matchesName && matchesLevel;
+      const matchesEscola = escola === "" || spell.Escola === escola;
+      const matchesComponentes = componente === "" || spell.Componente === componente;
+      const matchesDuracao = duracao === "" || spell.Duração === duracao;
+      const matchesFonte = fonte === "" || spell.Fonte === fonte;
+      return (
+        matchesName &&
+        matchesLevel &&
+        matchesEscola &&
+        matchesComponentes &&
+        matchesDuracao &&
+        matchesFonte
+      );
     });
 
+    // Ordenação
+    if (ordenacao === "level-asc") {
+      filtered.sort((a, b) => a.Nível - b.Nível);
+    } else if (ordenacao === "alpha") {
+      filtered.sort((a, b) => a.Título.localeCompare(b.Título));
+    }
+
+    // Renderização
     spellList.innerHTML = "";
     if (filtered.length === 0) {
       spellList.innerHTML = "<p>Nenhuma magia encontrada.</p>";
@@ -36,15 +83,20 @@ async function fetchSpells() {
         <p><strong>Descrição:</strong><br>${spell.Descrição.replace(/\n/g, "<br>")}</p>
         <p><em>Fonte: ${spell.Fonte}</em></p>
       `;
-
       spellList.appendChild(spellEl);
     });
   }
 
+  // Eventos
   searchInput.addEventListener("input", renderSpells);
   levelFilter.addEventListener("change", renderSpells);
+  schoolFilter.addEventListener("change", renderSpells);
+  componentFilter.addEventListener("change", renderSpells);
+  durationFilter.addEventListener("change", renderSpells);
+  sourceFilter.addEventListener("change", renderSpells);
+  sortFilter.addEventListener("change", renderSpells);
 
-  renderSpells(); // render inicial
+  renderSpells(); // inicial
 }
 
 fetchSpells();

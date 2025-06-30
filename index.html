@@ -12,6 +12,7 @@
 
   <div class="search-container">
     <input type="text" id="search" placeholder="Buscar magia por nome...">
+
     <select id="level-filter">
       <option value="">Todos os Níveis</option>
       <option value="0">Truques</option>
@@ -25,11 +26,31 @@
       <option value="8">Nível 8</option>
       <option value="9">Nível 9</option>
     </select>
+
+    <select id="school-filter">
+      <option value="">Todas as Escolas</option>
+    </select>
+
+    <select id="component-filter">
+      <option value="">Todos os Componentes</option>
+    </select>
+
+    <select id="duration-filter">
+      <option value="">Todas as Durações</option>
+    </select>
+
+    <select id="source-filter">
+      <option value="">Todas as Fontes</option>
+    </select>
+
+    <select id="sort-filter">
+      <option value="none">Sem ordenação</option>
+      <option value="level-asc">Nível (crescente)</option>
+      <option value="alpha">Ordem alfabética (A-Z)</option>
+    </select>
   </div>
 
-  <div class="spell-list" id="spell-list">
-    <!-- As magias serão carregadas aqui -->
-  </div>
+  <div class="spell-list" id="spell-list"></div>
 
   <script src="filter.js"></script>
 </body>

@@ -1,6 +1,7 @@
 async function fetchSpells() {
   const response = await fetch('spells.json');
   const spells = await response.json();
+  let knownSpells = JSON.parse(localStorage.getItem("knownSpells")) || [];
 
   const searchInput = document.getElementById("search");
   const levelFilter = document.getElementById("level-filter");
@@ -73,8 +74,16 @@ async function fetchSpells() {
       const spellEl = document.createElement("div");
       spellEl.classList.add("spell");
 
+      const isKnown = knownSpells.includes(spell.Título);
+
       spellEl.innerHTML = `
-        <h3>${spell.Título} (Nível ${spell.Nível})</h3>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h3>${spell.Título} (Nível ${spell.Nível})</h3>
+            <button class="known-btn" data-title="${spell.Título}">
+              ${isKnown ? '⭐ Conhecida' : '☆ Marcar'}
+            </button>
+          </div>
+
         <p><strong>Escola:</strong> ${spell.Escola}</p>
         <p><strong>Tempo de Conjuração:</strong> ${spell.Tempo}</p>
         <p><strong>Alcance:</strong> ${spell.Alcance}</p>
@@ -86,6 +95,20 @@ async function fetchSpells() {
       spellList.appendChild(spellEl);
     });
   }
+
+  // Botões de marcação
+  document.querySelectorAll(".known-btn").forEach(button => {
+    button.addEventListener("click", () => {
+      const title = button.getAttribute("data-title");
+      if (knownSpells.includes(title)) {
+        knownSpells = knownSpells.filter(t => t !== title);
+      } else {
+        knownSpells.push(title);
+      }
+      localStorage.setItem("knownSpells", JSON.stringify(knownSpells));
+      renderSpells(); // re-renderiza para atualizar visual
+    });
+  });
 
   // Eventos
   searchInput.addEventListener("input", renderSpells);

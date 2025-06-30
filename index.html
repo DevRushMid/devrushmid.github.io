@@ -1,1 +1,147 @@
-Hello World
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Grimório Online - Buscador de Magias</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #1e1e2f;
+      color: #f8f8f2;
+      margin: 0;
+      padding: 2rem;
+    }
+    h1 {
+      text-align: center;
+      color: #ffcb6b;
+    }
+    .search-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    input, select {
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px;
+    }
+    #search {
+      width: 300px;
+    }
+    .spell-list {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .spell {
+      background-color: #2a2a3d;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      border-left: 5px solid #ffcb6b;
+    }
+    .spell h3 {
+      margin: 0 0 0.5rem 0;
+    }
+    .spell p {
+      margin: 0.3rem 0;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Grimório Online</h1>
+
+  <div class="search-container">
+    <input type="text" id="search" placeholder="Buscar magia por nome...">
+    <select id="level-filter">
+      <option value="">Todos os Níveis</option>
+      <option value="0">Truques</option>
+      <option value="1">Nível 1</option>
+      <option value="2">Nível 2</option>
+      <option value="3">Nível 3</option>
+      <option value="4">Nível 4</option>
+      <option value="5">Nível 5</option>
+      <option value="6">Nível 6</option>
+      <option value="7">Nível 7</option>
+      <option value="8">Nível 8</option>
+      <option value="9">Nível 9</option>
+    </select>
+  </div>
+
+  <div class="spell-list" id="spell-list">
+    <!-- As magias serão inseridas aqui -->
+  </div>
+
+  <script>
+    const spells = [
+      {
+        nome: "Bola de Fogo",
+        nivel: 3,
+        escola: "Evocação",
+        descricao: "Uma explosão flamejante atinge uma área causando 8d6 de dano de fogo."
+      },
+      {
+        nome: "Mísseis Mágicos",
+        nivel: 1,
+        escola: "Evocação",
+        descricao: "Projéteis mágicos que acertam automaticamente, causando 1d4+1 de dano cada."
+      },
+      {
+        nome: "Toque Arrepiante",
+        nivel: 0,
+        escola: "Necromancia",
+        descricao: "Um toque espectral causa dano necrótico e impede a cura do alvo por 1 turno."
+      },
+      {
+        nome: "Imobilizar Pessoa",
+        nivel: 2,
+        escola: "Encantamento",
+        descricao: "Paralisa um humanoide se ele falhar num teste de resistência de Sabedoria."
+      }
+    ];
+
+    const searchInput = document.getElementById("search");
+    const levelFilter = document.getElementById("level-filter");
+    const spellList = document.getElementById("spell-list");
+
+    function renderSpells() {
+      const query = searchInput.value.toLowerCase();
+      const level = levelFilter.value;
+
+      const filtered = spells.filter(spell => {
+        const matchesName = spell.nome.toLowerCase().includes(query);
+        const matchesLevel = level === "" || spell.nivel.toString() === level;
+        return matchesName && matchesLevel;
+      });
+
+      spellList.innerHTML = "";
+      if (filtered.length === 0) {
+        spellList.innerHTML = "<p>Nenhuma magia encontrada.</p>";
+        return;
+      }
+
+      filtered.forEach(spell => {
+        const spellEl = document.createElement("div");
+        spellEl.classList.add("spell");
+        spellEl.innerHTML = `
+          <h3>${spell.nome} (Nível ${spell.nivel})</h3>
+          <p><strong>Escola:</strong> ${spell.escola}</p>
+          <p>${spell.descricao}</p>
+        `;
+        spellList.appendChild(spellEl);
+      });
+    }
+
+    searchInput.addEventListener("input", renderSpells);
+    levelFilter.addEventListener("change", renderSpells);
+
+    renderSpells(); // render inicial
+  </script>
+
+</body>
+</html>

@@ -1,6 +1,6 @@
-async function fetchSpells() {
-  const response = await fetch('spells.json');
-  const spells = await response.json();
+function fetchSpells(spells) {
+  //const response = await fetch('spells.json');
+  // const spells = await response.json();
 
   // Recupera magias conhecidas do localStorage
   let knownSpells = JSON.parse(localStorage.getItem("knownSpells")) || [];
@@ -181,4 +181,78 @@ document.getElementById("export-pdf").addEventListener("click", () => {
 
 }
 
-fetchSpells();
+async function loadSpells() {
+  const isLocal = location.protocol === 'file:';
+
+  if(isLocal){
+    return [
+      {
+        "Conhecida": "Não",
+        "Título": "Amizade",
+        "Ritual": "Não",
+        "Nível": 0,
+        "Escola": "Encantamento",
+        "Tempo": "1 ação",
+        "Alcance": "Pessoal",
+        "Componente": "S, M",
+        "Duração": "1 minuto",
+        "Concentração": "Sim",
+        "Descrição": "Material: uma pequena quantidade de maquiagem aplicada ao rosto durante a conjuração da magia.\n\nPela duração, você terá vantagem em todos os testes de Carisma direcionados a uma criatura, à sua escolha, que não seja hostil a você. Quando a magia acabar, a criatura perceberá que você usou maia para influenciar o humor dela, e ficará hostil a você. Uma criatura propensa a violência irá atacar você. Outra criatura pode buscar outras formas de retaliação (a critério do Mestre), dependendo da natureza da sua interação com ela.",
+        "Fonte": "Livro do Jogador",
+        "Opções": "Sim"
+      },
+      {
+        "Conhecida": "Não",
+        "Título": "Ataque Certeiro",
+        "Ritual": "Não",
+        "Nível": 0,
+        "Escola": "Adivinhação",
+        "Tempo": "1 ação",
+        "Alcance": "9 metros",
+        "Componente": "S",
+        "Duração": "1 rodada",
+        "Concentração": "Sim",
+        "Descrição": "Você estende sua mão e aponta o dedo para um alvo no alcance. Sua magia garante a você uma breve intuição sobre as defesas do alvo. No seu próximo turno, você terá vantagem na primeira jogada de ataque contra o alvo, considerando que essa magia não tenha acabado.",
+        "Fonte": "Livro do Jogador",
+        "Opções": "Não"
+      },
+      {
+        "Conhecida": "Não",
+        "Título": "Bordão Místico",
+        "Ritual": "Não",
+        "Nível": 0,
+        "Escola": "Transmutação",
+        "Tempo": "1 ação bônus",
+        "Alcance": "Toque",
+        "Componente": "V, S, M",
+        "Duração": "1 minuto",
+        "Concentração": "Não",
+        "Descrição": "Material: visco, uma folha de trevo e uma clava ou bordão.\n\nA madeira de uma clava ou bordão, que você esteja segurando, é imbuída com o poder da natureza. Pela duração, você pode usar sua habilidade de conjuração ao invés da sua Força para as jogadas de ataque e dano corpo-a-corpo usando essa arma, e o dado de dano da arma se torna um d8. A arma também se torna mágica, se ela já não for. A magia acaba se você conjura-la novamente ou se você soltar a arma.",
+        "Fonte": "Livro do Jogador"
+      },
+      {
+        "Conhecida": "Não",
+        "Título": "Chama Sagrada",
+        "Ritual": "Não",
+        "Nível": 0,
+        "Escola": "Evocação",
+        "Tempo": "1 ação",
+        "Alcance": "18 metros",
+        "Componente": "V, S",
+        "Duração": "Instantânea",
+        "Concentração": "Não",
+        "Descrição": "Radiação similar a uma chama desce sobre uma criatura que você possa ver, dentro do alcance. O alvo deve ser bem sucedido num teste de resistência de Destreza ou sofrerá 1d8 de dano radiante. O alvo não recebe qualquer benefício de cobertura contra esse teste de resistência.\nO dano da magia aumenta em 1d8 quando você alcança o 5° nível (2d8), 11° nível (3d8) e 17° nível (4d8).",
+        "Fonte": "Livro do Jogador",
+        "Opções": "Escolas"
+      }
+      
+    ];
+  } else {
+    const response = await fetch('spells5.json');
+    return await response.json();
+  }
+}
+
+loadSpells().then(spells => {
+  fetchSpells(spells);
+});

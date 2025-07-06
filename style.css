@@ -75,3 +75,31 @@ input, select {
   margin-top: 10px;
   font-weight: bold;
 }
+
+.container {
+  max-width: 600px;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+.system-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.system-card {
+  padding: 1rem;
+  border: 1px solid #ffcb6b;
+  border-radius: 8px;
+  background-color: #2c2c3b;
+  color: #fff3d1;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.system-card:hover {
+  background-color: #ffcb6b;
+  color: #1e1e2f;
+}

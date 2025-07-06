@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Grimório Online - Buscador de Magias</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <h1>Grimório Online</h1>
+
+  <div class="search-container">
+    <input type="text" id="search" placeholder="Buscar magia por nome...">
+
+    <select id="level-filter">
+      <option value="">Todos os Níveis</option>
+      <option value="0">Truques</option>
+      <option value="1">Nível 1</option>
+      <option value="2">Nível 2</option>
+      <option value="3">Nível 3</option>
+      <option value="4">Nível 4</option>
+      <option value="5">Nível 5</option>
+      <option value="6">Nível 6</option>
+      <option value="7">Nível 7</option>
+      <option value="8">Nível 8</option>
+      <option value="9">Nível 9</option>
+    </select>
+
+    <label style="display: flex; align-items: center; gap: 0.5rem; color: #ffcb6b;">
+      <input type="checkbox" id="show-known-only">
+      Mostrar somente conhecidas
+    </label>
+
+    <select id="school-filter">
+      <option value="">Todas as Escolas</option>
+    </select>
+
+    <select id="class-filter">
+         <option value="">Todos as Classes</option>
+    </select>
+
+    <select id="component-filter">
+      <option value="">Todos os Componentes</option>
+    </select>
+
+    <select id="duration-filter">
+      <option value="">Todas as Durações</option>
+    </select>
+
+    <select id="source-filter">
+      <option value="">Todas as Fontes</option>
+    </select>
+
+    <select id="sort-filter">
+      <option value="none">Sem ordenação</option>
+      <option value="level-asc">Nível (crescente)</option>
+      <option value="alpha">Ordem alfabética (A-Z)</option>
+    </select>
+  </div>
+
+  <div style="text-align: center; margin-bottom: 1rem;">
+    <button id="export-pdf" class="known-btn">📄 Exportar PDF (Conhecidas)</button>
+  </div>
+
+  <div class="spell-list" id="spell-list"></div>
+
+  <script src="filter5-5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</body>
+</html>

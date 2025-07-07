@@ -1,4 +1,4 @@
-export function exportSpellsToPDF(spells, knownTitles, filename = "grimorio.pdf") {
+window.exportSpellsToPDF = function (spells, knownTitles, filename = "grimorio.pdf") {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
@@ -16,19 +16,28 @@ export function exportSpellsToPDF(spells, knownTitles, filename = "grimorio.pdf"
     return;
   }
 
-  let y = 10;
+  let y = 10; // posição inicial da primeira página
+  const margemInferior = 20;
+  const alturaMaxima = 280;
+  const alturaLinha = 6;
 
   conhecidas.forEach((spell, index) => {
-    if (y > 270) {
-      doc.addPage();
-      y = 10;
+    // Função utilitária para pular página se necessário
+    function checarEspaco(quantasLinhas) {
+      if (y + (quantasLinhas * alturaLinha) > alturaMaxima - margemInferior) {
+        doc.addPage();
+        y = 10;
+      }
     }
 
+    // Cabeçalho
+    checarEspaco(1);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(12);
     doc.text(`${spell.Título} (Nível ${spell.Nível})`, 10, y);
     y += 7;
 
+    // Bloco de informações
     const infoLines = [
       `Escola: ${spell.Escola}`,
       `Classe: ${spell.Classe}`,
@@ -41,25 +50,33 @@ export function exportSpellsToPDF(spells, knownTitles, filename = "grimorio.pdf"
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
     infoLines.forEach(line => {
-      if (y > 280) {
-        doc.addPage();
-        y = 10;
-      }
+      checarEspaco(1);
       doc.text(line, 10, y);
-      y += 6;
+      y += alturaLinha;
     });
 
     y += 2;
 
+    // Descrição com divisão automática entre páginas
     const descricao = doc.splitTextToSize(spell.Descrição, 180);
-    if (y + descricao.length * 6 > 280) {
-      doc.addPage();
-      y = 10;
+    let i = 0;
+    while (i < descricao.length) {
+      const linhasRestantes = Math.floor((alturaMaxima - y - margemInferior) / alturaLinha);
+      const trecho = descricao.slice(i, i + linhasRestantes);
+      doc.text(trecho, 10, y);
+      y += trecho.length * alturaLinha;
+      i += trecho.length;
+      if (i < descricao.length) {
+        doc.addPage();
+        y = 10;
+      }
     }
-    doc.text(descricao, 10, y);
-    y += descricao.length * 6 + 8;
 
+    y += 8;
+
+    // Linha separadora
     if (index < conhecidas.length - 1) {
+      checarEspaco(1);
       doc.setDrawColor(200);
       doc.line(10, y, 200, y);
       y += 10;
@@ -67,4 +84,4 @@ export function exportSpellsToPDF(spells, knownTitles, filename = "grimorio.pdf"
   });
 
   doc.save(filename);
-}
+};

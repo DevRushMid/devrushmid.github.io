@@ -1,6 +1,8 @@
+import { exportSpellsToPDF } from './export-pdf.js';
+
 async function loadSpells() {
   const isLocal = location.protocol === 'file:';
-
+    console.log(isLocal);
   if (isLocal) {
     return [
       {
@@ -136,51 +138,9 @@ function fetchSpells(spells) {
   showKnownOnly.addEventListener("change", renderSpells);
   sortFilter.addEventListener("change", renderSpells);
 
-  // Exportar PDF
   document.getElementById("export-pdf").addEventListener("click", () => {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-
-    const conhecidas = spells.filter(spell => knownSpells.includes(spell.Título));
-    if (conhecidas.length === 0) {
-      alert("Nenhuma magia conhecida para exportar.");
-      return;
-    }
-
-    let y = 10;
-    conhecidas.forEach((spell, index) => {
-      const texto = [
-        `${spell.Título} (Nível ${spell.Nível})`,
-        `Escola: ${spell.Escola}`,
-        `Classe: ${spell.Classe}`,
-        `Tempo: ${spell["Tempo de Conjuração"]}`,
-        `Alcance: ${spell.Alcance}`,
-        `Componentes: ${spell.Componente}`,
-        `Duração: ${spell.Duração}${spell.Concentração === "Sim" ? " (Concentração)" : ""}`
-      ];
-      const descricao = doc.splitTextToSize(spell.Descrição, 180);
-
-      if (y > 270) {
-        doc.addPage();
-        y = 10;
-      }
-
-      doc.setFont("helvetica", "bold");
-      doc.text(texto[0], 10, y);
-      y += 6;
-      doc.setFont("helvetica", "normal");
-      doc.text(texto.slice(1), 10, y);
-      y += 6 * (texto.length - 1);
-      doc.text(descricao, 10, y);
-      y += descricao.length * 6 + 4;
-      if (index < conhecidas.length - 1) {
-        doc.line(10, y, 200, y);
-        y += 6;
-      }
+    exportSpellsToPDF(spells, knownSpells, "grimorio_5.5.pdf");
     });
-
-    doc.save("grimorio_5.5.pdf");
-  });
 
   renderSpells();
 }
